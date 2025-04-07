@@ -2,14 +2,21 @@ import csv
 import numpy as np
 
 def main():
-    data = input()
-    seat = Shuffle(data)
+    data = inputs()
+    seeds = int(input("seed(-1はランダム): "))
+    if seeds == -1:
+        seeds = None
+    seat = Shuffle(data, seeds)
     ans = static_seat_change(seat)
     printer(ans)
     output(ans)
 
-def Shuffle(data):
-    np.random.shuffle(data)
+def Shuffle(data, seed=None):
+    if seed is not None:
+        rng = np.random.default_rng(seed)
+    else:
+        rng = np.random.default_rng()
+    rng.shuffle(data)
     data.insert(0, 0)
     data.insert(1, 0)
     data.insert(4, 0)
@@ -54,7 +61,7 @@ def output(seat):
                 a[count].append(seat[i])
         writer.writerows(a,)
 
-def input():
+def inputs():
     with open("input/input.csv", "r") as f:
         data = [int(i[0]) for i in list(csv.reader(f))]
         print(list(data))
